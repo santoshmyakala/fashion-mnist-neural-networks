@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install (CPU-only PyTorch)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev]"
+      - run: ruff check src tests
+      - run: pytest -q
+      - name: Smoke-train every model on a subset (downloads and checksum-verifies the data)
+        run: |
+          for m in softmax mlp cnn; do
+            python -m fmnist.train --model $m --epochs 1 --limit 5000 --out smoke
+          done
