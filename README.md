@@ -41,17 +41,12 @@ Ankle boot       93.2%   96.6%   96.3%
 
 ## Pipeline
 
-```mermaid
-flowchart LR
-  dl[Download IDX files<br/>2 mirrors · MD5 verified] --> parse[Parse IDX<br/>no torchvision needed]
-  parse --> split[Train 54k / Val 6k<br/>Test 10k held out]
-  split --> aug["Augment (CNN only)<br/>flip · ±2 px shift"]
-  aug --> train[AdamW · OneCycle LR<br/>label smoothing 0.05]
-  train --> sel[Best epoch by<br/>val accuracy]
-  sel --> eval[Test accuracy<br/>per-class · confusion]
-  eval --> out[("reports/MODEL/<br/>metrics.json · png · model.pt")]
-  train -. optional .-> mlflow[("MLflow<br/>params · curves · artifacts")]
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/pipeline-dark.svg">
+  <img alt="Training pipeline: IDX files are downloaded from two mirrors with MD5 verification, parsed, split into 54k train, 6k validation and 10k test, augmented for the CNN, trained with AdamW and OneCycle, the best epoch chosen by validation accuracy, then tested once and written to reports, with optional MLflow tracking." src="docs/diagrams/pipeline-light.svg" width="100%">
+</picture>
+
+<sub>Animated diagram generated from <a href="docs/diagrams">docs/diagrams/*.yaml</a> with <a href="https://github.com/santoshmyakala/santoshmyakala/tree/main/tools/archdiagram">archdiagram</a>.</sub>
 
 ## Quick start
 

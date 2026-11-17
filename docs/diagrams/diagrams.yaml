@@ -1,0 +1,25 @@
+- out: pipeline
+  title: Fashion-MNIST — training pipeline
+  subtitle: Verified download → held-out test set → softmax, MLP and CNN trained the same way → best epoch by validation accuracy
+  grid: {dx: 220, dy: 160}
+  groups:
+    - {id: train, label: PyTorch training loop, icon: pytorch, color: orange, box: [1, 1, 3, 1]}
+  nodes:
+    - {id: dl, label: Download IDX, sub: 2 mirrors · MD5 verified, icon: internet, at: [0, 0], color: blue}
+    - {id: parse, label: Parse IDX, sub: no torchvision needed, icon: python, at: [1, 0], color: blue}
+    - {id: split, label: Split, sub: 54k train · 6k val · 10k test, icon: data, at: [2, 0], color: blue}
+    - {id: aug, label: Augment (CNN), sub: flip · ±2 px shift, icon: gear, at: [3, 0], color: blue}
+    - {id: fit, label: Train, sub: AdamW · OneCycle · smoothing, icon: pytorch, at: [3, 1], color: orange, badge: "3 models", pulse: true}
+    - {id: sel, label: Select epoch, sub: best val accuracy, icon: check, at: [2, 1], color: orange}
+    - {id: eval, label: Test once, sub: per-class · confusion, icon: chart, at: [1, 1], color: teal}
+    - {id: out, label: reports/MODEL/, sub: metrics.json · png · model.pt, icon: filesystem, at: [0, 1], color: teal}
+    - {id: mlflow, label: MLflow, sub: optional tracking, icon: mlflow, at: [4, 1], color: gray}
+  edges:
+    - {from: dl, to: parse, kind: secure, packet: doc}
+    - {from: parse, to: split, kind: data}
+    - {from: split, to: aug, kind: data}
+    - {from: aug, to: fit, kind: data, packet: box}
+    - {from: fit, to: sel, kind: data}
+    - {from: sel, to: eval, kind: data}
+    - {from: eval, to: out, kind: data, packet: doc}
+    - {from: fit, to: mlflow, label: optional, kind: metrics}
