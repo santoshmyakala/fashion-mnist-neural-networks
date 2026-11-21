@@ -46,8 +46,6 @@ Ankle boot       93.2%   96.6%   96.3%
   <img alt="Training pipeline: IDX files are downloaded from two mirrors with MD5 verification, parsed, split into 54k train, 6k validation and 10k test, augmented for the CNN, trained with AdamW and OneCycle, the best epoch chosen by validation accuracy, then tested once and written to reports, with optional MLflow tracking." src="docs/diagrams/pipeline-light.svg" width="100%">
 </picture>
 
-<sub>Animated diagram generated from <a href="docs/diagrams">docs/diagrams/*.yaml</a> with <a href="https://github.com/santoshmyakala/santoshmyakala/tree/main/tools/archdiagram">archdiagram</a>.</sub>
-
 ## Quick start
 
 ```bash
